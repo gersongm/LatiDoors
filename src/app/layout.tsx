@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { Noto_Sans_Display } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
+
 import {
   ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs'
-import "./globals.css";
 
-const Noto = Noto_Sans_Display({ subsets: ["latin"] });
+} from "@clerk/nextjs";
+
+import { Montserrat } from "next/font/google";
+
+import "./globals.css";
+import { ThemeProvider } from "@/components/Theme-provider";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export const metadata: Metadata = {
   title: "Latin Doors",
@@ -18,15 +23,25 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{children: React.ReactNode;}>)
+{
+
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={Noto.className}>
-       
-          {children}</body>
+        <body className={montserrat.className}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            
+            <main>{children}</main>
+
+            <Toaster />
+          </ThemeProvider>
+        </body>
       </html>
     </ClerkProvider>
   );
