@@ -138,7 +138,13 @@ export function FormCreateBanco(prop: FormCreateBancoProps) {
                 <FormItem>
                   <FormLabel>Nombre del Banco</FormLabel>
                   <FormControl>
-                    <Input placeholder="Banco Nacional" {...field} />
+                    <Input placeholder="Banco Nacional" {...field} onChange={
+                      (e) => {
+                        const inputValue = e.target.value;
+                        const valueUperCase = inputValue.toUpperCase();
+                        field.onChange(valueUperCase);
+                      }
+                    } />
                   </FormControl>
                   <FormDescription>Digite minimo(3) caracteres</FormDescription>
                   <FormMessage />
