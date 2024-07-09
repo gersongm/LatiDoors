@@ -1,25 +1,26 @@
 "use client";
 
 import { Banco } from "@/app/(routes)/Models/Banco";
-import sqlAll, { sqlDelete, sqlSelect } from "@/app/Backend/sql/sqlAll";
+import sqlAll, { sqlSelect } from "@/app/Backend/sql/sqlAll";
 import { toast } from "@/components/ui/use-toast";
 
 import React, { useEffect, useState } from "react";
 
 import { ShowDataTable } from "@/components/ShowDataTable/ShowDataTable";
-import { columns } from "./columns";
+import { columns} from "./columns";
 
 
 
 export function ListBancos() {
   const [bancos, setBancos] = useState<Banco[]>([]);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const dataBancos = await sqlSelect(
           "tbl_bancos",
           "SELECT \
+          b.id, \
           b.nombre, \
           b.nCuenta,\
           b.fecha_corte,\
@@ -33,8 +34,7 @@ export function ListBancos() {
         );
 
         setBancos(dataBancos as Banco[]);
-
-        const tipoCuentas = await sqlAll("tbl_tipo_cuenta");
+      
       } catch (error) {
         toast({
           description: "Error al cargar los datos",
@@ -46,6 +46,8 @@ export function ListBancos() {
     fetchData(); // Fetch data on component mount
   }, []);
 
+
+ 
   return (
     <div className="mt-5">
       <ShowDataTable

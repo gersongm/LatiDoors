@@ -23,6 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React from "react";
+import { Search } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,10 +38,8 @@ export function ShowDataTable<TData, TValue>({
   titleFor,
   filtro,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
     data,
@@ -49,28 +48,34 @@ export function ShowDataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
     state: {
-      sorting,
       columnFilters,
+      sorting,
     },
   });
 
   return (
-    <div>
-      <div className="flex items-center py-4">
+    <div className=" shadow-md rounded-lg">
+      <div className="flex items-center py-4 ps-2 mb-2 ">
         <Input
+          className="max-w-sm rounded-lg"
           placeholder={`Filtrar por ${titleFor}...`}
           value={(table.getColumn(filtro)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn(filtro)?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+         
+        />
+          <Search
+          strokeWidth={1}
+          className="top-1/2 items-baseline  text-muted-foreground w-6 h-6"
         />
       </div>
 
       <div className="rounded-lg border shadow-md">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-gray-100">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

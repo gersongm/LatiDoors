@@ -54,7 +54,7 @@ export const columns: ColumnDef<Banco>[] = [
     {
       id: "actions",
       cell: ({ row }) => {
-        const banco = row;
+        const banco = row.original;
   
         return (
           <DropdownMenu>
@@ -74,7 +74,7 @@ export const columns: ColumnDef<Banco>[] = [
                     title: "Copiado",
                     description: (
                       <p className="inline-flex gap-2">
-                        <Copy /> Se copio el id del banco
+                        <Copy /> Se copio el banco {banco.id}
                       </p>
                     ),
                   });
@@ -98,7 +98,7 @@ export const columns: ColumnDef<Banco>[] = [
                   const saveBanco = await sqlDelete("tbl_bancos", banco.id);
                   if (saveBanco) {
                   toast({
-                    title: "Guardado",
+                    title: "Borrado",
                     description: (
                       <p className="inline-flex gap-2">
                         <SaveAll />  {saveBanco.respuesta} 

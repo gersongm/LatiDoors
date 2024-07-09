@@ -1,6 +1,6 @@
 // Define the structure of your client data with type safety
 export interface Banco {
-    id: number;
+    id: string;
     nombre: string;
     nCuenta: string;
     cuenta: string;
