@@ -39,7 +39,6 @@ import { TipoCuenta } from "@/app/(routes)/Models/TipoCuenta";
 import { Moneda } from "@/app/(routes)/Models/Moneda";
 
 import sqlAll, { sqlSelect,sqlAdd } from "@/app/Backend/sql/sqlAll";
-import { Banco } from "@/app/(routes)/Models/Banco";
 
 const formSchema = z.object({
   nombre: z.string().min(3).max(50),

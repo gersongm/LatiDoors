@@ -10,33 +10,35 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
   import { CirclePlus } from 'lucide-react'
-import { FormCreateBanco } from '../FormCreateBanco'
+import { FormCreateInventario } from '../FormCreateInventario/FormCreateInventario'
 
-export  function HeaderBancos() {
-    const [openCreate, setOpenCreate] = useState(false)
+export  function HeaderInventario() {
+  const [openCreate, setOpenCreate] = useState(false)
  
 
   return (
     <div className='flex justify-between items-center'>
-        <h1 className='text-2xl font-bold'>Listado de Bancos</h1>
+        <h1 className='text-2xl font-bold'>Inventario</h1>
         <Dialog open={openCreate} onOpenChange={setOpenCreate}>
             <DialogTrigger asChild>
                 <Button variant="outline" className='flex gap-2'>
                     <CirclePlus size={20}/>
-                    Nuevo Banco
+                    Ajustes
                 </Button>
             </DialogTrigger>
+            
             <DialogContent className="sm:max-w-[725px]">
                 <DialogHeader>
-                    <DialogTitle>Nuevo Banco</DialogTitle>
+                    <DialogTitle>Ajustes del Inventario</DialogTitle>
                     <DialogDescription>
-                        crea un nuevo banco
+                        modifica el inventario.
                     </DialogDescription>
                    
                 </DialogHeader>
-                <FormCreateBanco setOpenModalCreate={setOpenCreate}/>
+                <FormCreateInventario setOpenModalCreate={setOpenCreate}/>
             </DialogContent>
         </Dialog>
     </div>
   )
 }
+

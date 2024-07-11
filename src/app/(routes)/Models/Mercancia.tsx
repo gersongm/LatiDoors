@@ -1,6 +1,6 @@
 // Define the structure of your client data with type safety
 export interface Mercancia {
-    id: number;
+    id: string;
     nombre: string;
     descripcion: string;
     precio_costo: number;

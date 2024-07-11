@@ -75,7 +75,7 @@ export function ShowDataTable<TData, TValue>({
 
       <div className="rounded-lg border shadow-md">
         <Table>
-          <TableHeader className="bg-gray-100">
+          <TableHeader className="bg-slate-200 ">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
