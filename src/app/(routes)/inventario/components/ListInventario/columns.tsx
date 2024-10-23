@@ -6,57 +6,62 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import {
-  Copy,
-  CopyIcon,
-  DeleteIcon,
-  Edit2Icon,
   EyeIcon,
   MoreHorizontal,
-  SaveAll,
 } from "lucide-react";
 import Link from "next/link";
 
-import { sqlDelete } from "@/app/Backend/sql/sqlAll";
+
 import { Inventario } from "@/app/(routes)/Models/Inventario";
+import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { GridColDef } from "@mui/x-data-grid";
 
 
-export const columns: ColumnDef<Inventario>[] = [
-     {
-        accessorKey: "nombre",
-        header: "Producto",
+export const columns: GridColDef<Inventario>[] = [
+   
+   {
+      field: "fecha_movimiento",
+      headerName: "Fecha",
+      width: 150,
+      renderCell: ({ row }) => {
+        const fecha = row.fecha_movimiento;
+        const fechaFormateada = format(fecha? fecha.toString(): "", "dd/MM/yyyy");
+        return <div>{fechaFormateada? fechaFormateada.toString(): ""}</div>;
       },
+    }, 
     {
-      accessorKey: "fecha_movimiento",
-      header: "Fecha",
+      field: "nombre",
+      headerName: "Producto",
+      width: 250,
     },
     {
-      accessorKey: "tipo_movimiento",
-      header: "Movimiento",
+      field: "tipo_movimiento",
+      headerName: "Movimiento",
     },
   
     {
-      accessorKey: "flag",
-      header: "Tipo",
+      field: "flag",
+      headerName: "Tipo",
     },
     {
-      accessorKey: "cantidad",
-      header: "Disponible",
+      field: "cantidad",
+      headerName: "Cantidad",
     },
     {
-      accessorKey: "fullName",
-      header: "Usuario",
+      field: "fullName",
+      headerName: "Usuario",
+      width:200,
     },
    
     {
-      id: "actions",
-      cell: ({ row }) => {
-        const register = row.original;
+      field: "Acciones",
+      renderCell: ({ row }) => {
+        const register = row;
   
         return (
           <DropdownMenu>
@@ -79,3 +84,34 @@ export const columns: ColumnDef<Inventario>[] = [
       },
     },
   ];
+
+export const columnsDisponible: ColumnDef<Inventario>[] = [
+   
+    {
+       accessorKey: "categoria",
+       header: "Categoria",
+     }, 
+     {
+       accessorKey: "nombre",
+       header: "Producto",
+     },
+     {
+       accessorKey: "cantidad",
+       header: "Disponible",
+     },
+   
+     {
+       accessorKey: "is_activo",
+       header: "Estado",
+       cell: ({ row }) => {
+        const data=row.original;
+        const state=data.isActivo?(data.cantidad>0? "secondary":"destructive"):"destructive";
+        return(
+        <Badge  variant={state}>
+          {data.isActivo?(data.cantidad>0? "Disponible":" No Disponible"):"Innativo"}
+        </Badge>
+        )
+      },
+     },
+   
+   ];

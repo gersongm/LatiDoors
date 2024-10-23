@@ -6,8 +6,7 @@ import { CustomIcon } from '@/components/CustomIcon';
 import { Percent } from 'lucide-react';
 import { SalesData } from './Sales.data';
 import { ICustomizedLabelProps } from './Sales.type';
-
-
+import { useState, useEffect } from 'react';
 
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -33,7 +32,21 @@ const renderCustomizedLabel: React.FC<ICustomizedLabelProps> = ({
 };
 
 export function Sales() {
-    const data=SalesData;
+  const [data, setData] = useState<{ name: string; value: number }[]>([]);
+
+  useEffect(() => {
+    SalesData().then((results) => {
+      if(!results) return;
+
+      const newData = results.map((row: {name:string;value:number }) => ({
+       
+        name: row.name,
+        value: Number(row.value), // replace this with the actual value you want to display
+      }));
+    
+      setData(newData);
+    });
+  }, []);
   return (
     <div className="mb-4 lg:mb-0 shadow-sm bg-background rounded-lg p-5 w-full md:w-96 hover:shadow-lg transition">
         <div className='flex gap-x-2 items mb-2'>
@@ -62,21 +75,7 @@ export function Sales() {
           <Tooltip/>
         </PieChart>
       </ResponsiveContainer> 
- {/*        <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={400}>
-          <Pie
-            dataKey="value"
-            isAnimationActive={false}
-            data={data}
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-            fill="#8884d8"
-            label
-          />
-         <Tooltip />
-        </PieChart>
-      </ResponsiveContainer> */}
+
         </div>
         
     </div>

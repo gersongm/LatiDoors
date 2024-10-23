@@ -6,6 +6,23 @@
 htm,body :root{
  height: 100%;
 }
+.calendar-container .fc .fc-button-primary{
+  background-color: hsl(var(--primary));
+   border-color: hsl(var(--primary));
+   color: hsl(var(--primary-foreground));
+   border-radius: 5px;
+
+}
+
+.calendar-container .fc .fc-button-primary:not(:disabled).fc-button-active{
+  background-color: #2e2e2e
+}
+
+@media (max-width: 768px) {
+.calendar-container .fc .fc-toolbar{
+  display: block;
+}
+}
 
   @layer base {
     :root {
@@ -47,11 +64,11 @@ htm,body :root{
       --card: 222.2 84% 4.9%;
       --card-foreground: 210 40% 98%;
 
-      --popover: 217 20.4% 34.9%;
+      --popover: 217 20.4% 84.9%;
       --popover-foreground: 210 40% 98%;
 
       --primary: 210 40% 98%;
-      --primary-foreground: 222.2 47.4% 11.2%;
+      --primary-foreground: 222.2 47.4% 98.2%;
 
       --secondary: 217.2 32.6% 17.5%;
       --secondary-foreground: 210 40% 98%;

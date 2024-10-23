@@ -145,7 +145,7 @@ export const columns: ColumnDef<Payment>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Ver Cliente</DropdownMenuItem>
-            <DropdownMenuItem>Ver detalle Factura</DropdownMenuItem>
+            <DropdownMenuItem>Detalle de Factura</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -161,7 +161,7 @@ export function CustumerDataTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
-const data=dataCustomer;
+const data=dataCustomer();
 
   const table = useReactTable({
     data,
@@ -216,6 +216,7 @@ const data=dataCustomer;
                     className="capitalize"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) =>
+
                       column.toggleVisibility(!!value)
                     }
                   >

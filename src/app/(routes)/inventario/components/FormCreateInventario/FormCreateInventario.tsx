@@ -42,59 +42,58 @@ import { Input } from "@/components/ui/input";
 
 import { FormCreateInventarioProps } from "./FormCreateInventario.type";
 
-import sqlAll, { sqlAdd } from "@/app/Backend/sql/sqlAll";
+import {SelectData}  from "@/app/Backend/sql/sqlAll";
+import { sqlInsertInventario } from "@/app/Backend/sql/sqlGetInventario";
 
 import { Mercancia } from "@/app/(routes)/Models/Mercancia";
 import { Cuenta } from "@/app/(routes)/Models/Cuenta";
-import { Usuario } from "@/app/(routes)/Models/Usuario";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 
+import {useUser} from "@clerk/nextjs";
 
 const formSchema = z.object({
-  fecha_movimiento: z.date().readonly(),
+  fecha_movimiento: z.string(),
   tipo_movimiento: z
-    .string({ required_error: "El tipo de movimiento es requerido" })
-    .min(5)
-    .max(50),
+    .string({ required_error: "El tipo de movimiento es requerido" }),
+   
   cantidad: z.number({ required_error: "La cantidad es requerida" }).min(1),
-  flag: z.string({ required_error: "El flag es requerido" }).min(1),
-  id_articulo: z.string({ required_error: "El Producto es requerido" }).min(1),
-  id_user: z.number(),
+  flag: z.string(),
+  id_articulo: z.string({ required_error: "El Producto es requerido" }),
+  id_user: z.string(),
   id_cuenta: z.string({ required_error: "La cuenta es requerida" }).min(1),
 });
 export function FormCreateInventario(props: FormCreateInventarioProps) {
   const { setOpenModalCreate } = props;
+  const {isLoaded,user}=useUser();
+
+  if(!isLoaded || !user) return null;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fecha_movimiento:new Date(),
+      fecha_movimiento:new Date().toLocaleDateString("es-ES"),
       tipo_movimiento: "",
       cantidad: 0,
       flag: "",
       id_articulo: "",
-      id_user: 0,
+      id_user: "",
       id_cuenta: "",
     },
   });
 
   const [productos, setProductos] = useState<Mercancia[]>([]);
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [cuentas, setCuentas] = useState<Cuenta[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const Usuarios = await sqlAll("tbl_users");
-        setUsuarios(Usuarios as Usuario[]);
-
-        const Productos = await sqlAll("tbl_mercancias");
-
-        setProductos(Productos as Mercancia[]);
-        ///////////////////////////////
-        const Cuentas = await sqlAll("tbl_cuentas");
-        setCuentas(Cuentas as Cuenta[]);
+      
+     const Mercancias = await SelectData("tbl_mercancias","Select id,nombre");
+         setProductos(Mercancias as unknown as Mercancia[]);
+        
+           const Cuentas = await SelectData("tbl_cuentas", "Select id,cuenta,descripcion");
+        setCuentas(Cuentas as unknown as Cuenta[]); 
       } catch (error) {
         toast({
           variant: "destructive",
@@ -113,20 +112,34 @@ export function FormCreateInventario(props: FormCreateInventarioProps) {
   const { isValid } = form.formState;
   const { toast } = useToast();
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
- 
-    values.id_user = 1;
-    values.fecha_movimiento =new Date(format( values.fecha_movimiento,"MM-dd-yyyy"));
-    try {
-        console.log(values);
-      const result = await sqlAdd("tbl_inventario", values);
+     
 
+ 
+    try {
+       const newString=values.fecha_movimiento.split("/");
+
+       const dias=newString[0];
+       const meses=newString[1];
+       const años=newString[2];
+       const fechaFormateada=años+"-"+meses+"-"+dias;
+      
+    
+     
+       values.id_user=user.id;
+        values.fecha_movimiento = fechaFormateada;
+        values.flag = values.tipo_movimiento === "Compras" ? 
+        "E" : values.tipo_movimiento === "Ventas" ? "S":"D";
+        
+      const result = await sqlInsertInventario(values);
+  
       if (result) {
         toast({
-          title: "Guardar",
-          description: result.respuesta, // description: "Se ha creado el banco correctamente",
+          title: "Éxito",
+          description:`Registro ${result} guardado con èxito`, // description: "Se ha creado el banco correctamente",
         });
         setOpenModalCreate(false);
       } else {
+        
         toast({
           variant: "destructive",
           title: "Uff! Algo salió mal.",
@@ -159,15 +172,11 @@ export function FormCreateInventario(props: FormCreateInventarioProps) {
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
+                            "w-full pl-3 text-left font-normal ",
                             !field.value && "text-muted-foreground"
                           )}
                         >
-                          {field.value ? (
-                            format(field.value, "dd/MM/yyyy").toString()
-                          ) : (
-                            <span>fecha de movimiento</span>
-                          )}
+                          {field.value }
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -176,7 +185,7 @@ export function FormCreateInventario(props: FormCreateInventarioProps) {
                       <Calendar
                         mode="single"
                         selected={new Date(field.value) as Date}
-                        onSelect={field.onChange}
+                        onSelect={(date?) => field.onChange(format(date ?date:"", "yyyy-MM-dd"))}
                         disabled={(date) => date > new Date()}
                         initialFocus
                       />
@@ -212,36 +221,13 @@ export function FormCreateInventario(props: FormCreateInventarioProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="flag"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Flag</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value.toString()}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value={"E"}> Entrada</SelectItem>
-                        <SelectItem value={"S"}> Salida</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                 </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+       
             <FormField
               control={form.control}
               name="id_articulo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Producto</FormLabel>
+                  <FormLabel>Producto/Servicio</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value.toString()}
@@ -250,16 +236,17 @@ export function FormCreateInventario(props: FormCreateInventarioProps) {
                       <SelectValue placeholder="Seleccione el producto" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectGroup>
-                        {productos.map((producto) => (
+                     <SelectGroup>
+                     <SelectLabel>Mercancia</SelectLabel>
+                         {productos.map((producto) => (
                           <SelectItem
                             key={producto.id}
                             value={ producto.id.toString()}
                           >
                             {producto.nombre}
                           </SelectItem>
-                        ))}
-                      </SelectGroup>
+                        ))} 
+                      </SelectGroup> 
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -272,7 +259,7 @@ export function FormCreateInventario(props: FormCreateInventarioProps) {
               name="cantidad"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ingrese la cantidad</FormLabel>
+                  <FormLabel>Cantidad</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -280,7 +267,9 @@ export function FormCreateInventario(props: FormCreateInventarioProps) {
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
+
                   </FormControl>
+                  <FormDescription></FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -302,15 +291,15 @@ export function FormCreateInventario(props: FormCreateInventarioProps) {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Cuenta Contable</SelectLabel>
-                        {cuentas.map((cuenta) => (
+                         {cuentas.map((cuenta) => (
                           <SelectItem
                             key={cuenta.id}
-                            value={cuenta.id.toString()}
+                            value={cuenta.cuenta.toString()}
                           >
                             {cuenta.cuenta} {cuenta.descripcion}
                           </SelectItem>
-                        ))}
-                      </SelectGroup>
+                        ))} 
+                      </SelectGroup> 
                     </SelectContent>
                   </Select>
                   <FormMessage />

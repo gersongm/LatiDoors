@@ -1,5 +1,5 @@
 "use client"
-import React ,{useState} from 'react'
+import React ,{useEffect, useState} from 'react'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -12,9 +12,12 @@ import {
   import { CirclePlus } from 'lucide-react'
 import { FormCreateInventario } from '../FormCreateInventario/FormCreateInventario'
 
+
+
 export  function HeaderInventario() {
-  const [openCreate, setOpenCreate] = useState(false)
+     const [openCreate, setOpenCreate] = useState(false)
  
+
 
   return (
     <div className='flex justify-between items-center'>

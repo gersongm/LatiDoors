@@ -1,15 +1,20 @@
 "use client";
+
+import { useEffect,useState } from "react";
+
 import { SidebarRoutes } from "@/components/SidebarRoutes";
 import { Input } from "@/components/ui/input";
 import { ModeToggle } from "@/components/ToogleTheme";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+
+import { SignedIn,UserButton } from "@clerk/nextjs";
 
 import { Menu, Search } from "lucide-react";
 
 import { ShowFullName } from "../ShowFullName";
-import { useEffect,useState } from "react";
+import { Notification } from "../Notification";
+
 
 export function Navbar() {
   const [isMountd, setIsMounted] = useState(false);
@@ -24,7 +29,7 @@ export function Navbar() {
   return (
     <nav
       className="flex items-center px-2 gap-x-4 md:px-6 
-      justify-between w-full bg-background border-b h-20"
+      justify-between lg:justify-end w-full bg-background border-b h-20"
     >
       <li className="block lg:hidden">
         <Sheet>
@@ -36,25 +41,18 @@ export function Navbar() {
           </SheetContent>
         </Sheet>
       </li>
-      <li className="relative w[300px]">
-        <Input placeholder="Buscar..." className="rounded-lg" />
-        <Search
-          strokeWidth={1}
-          className="absolute top-1/2 right-2 text-muted-foreground"
-        />
-      </li>
-      <li className="flex items-center gap-x-2">
+      
+      <li className="flex items-center justify-end gap-x-1">
         <ShowFullName />
         
+          <Notification />
           <ModeToggle />
 
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
+          <div className="ms-2">
+          <SignedIn >
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
-        
+          </div>
       </li>
     </nav>
   );

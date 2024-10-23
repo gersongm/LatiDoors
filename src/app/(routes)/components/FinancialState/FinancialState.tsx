@@ -4,7 +4,7 @@ import { Graphic } from "../Graphic"
 
 export function FinancialState() {
   return (
-    <div className="shadow-sm bg-background rounded-lg p-5">
+    <div className="shadow-sm bg-background rounded-lg p-5 w-full">
         <div className="flex items-center gap-2">
             <CustomIcon icon={BarChart} />
             <h2 className="text-lg font-semibold">Estado Financiero</h2>

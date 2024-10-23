@@ -21,6 +21,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter
 } from "@/components/ui/table";
 import React from "react";
 import { Search } from "lucide-react";
@@ -30,6 +31,10 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   titleFor: string;
   filtro: string;
+  total?:{
+    titulo:string;
+    cantidad:number | string;
+  }
 }
 
 export function ShowDataTable<TData, TValue>({
@@ -37,6 +42,7 @@ export function ShowDataTable<TData, TValue>({
   data,
   titleFor,
   filtro,
+  total,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -57,20 +63,20 @@ export function ShowDataTable<TData, TValue>({
 
   return (
     <div className=" shadow-md rounded-lg">
-      <div className="flex items-center py-4 ps-2 mb-2 ">
+      <div className="flex items-center py-4 ps-2 mb-2 relative max-w-sm">
         <Input
-          className="max-w-sm rounded-lg"
+          className="max-w rounded-lg"
           placeholder={`Filtrar por ${titleFor}...`}
           value={(table.getColumn(filtro)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn(filtro)?.setFilterValue(event.target.value)
           }
-         
-        />
+           />
           <Search
           strokeWidth={1}
-          className="top-1/2 items-baseline  text-muted-foreground w-6 h-6"
+          className="right-1 absolute items-baseline  text-muted-foreground w-6 h-6"
         />
+        
       </div>
 
       <div className="rounded-lg border shadow-md">
@@ -121,6 +127,13 @@ export function ShowDataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
+{total && 
+      <TableFooter>
+      <TableRow>
+        <TableCell className="text-right text-xl " colSpan={5}>{total.titulo}:</TableCell>
+        <TableCell className="text-right text-xl">{total.cantidad}</TableCell>
+      </TableRow>
+    </TableFooter>}
         </Table>
       </div>
 {/* //paginacion de la tabla */}

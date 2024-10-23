@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss"
 
+
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -10,12 +12,30 @@ const config = {
 	],
   prefix: "",
   theme: {
+    colors: {
+      'blue': '#1fb6ff',
+      'purple': '#7e5bef',
+      'pink': '#ff49db',
+      'orange': '#ff7849',
+      'green': '#13ce66',
+      'yellow': '#ffc82c',
+      'gray-dark': '#565584',
+      'gray': '#8492a6',
+      'gray-light': '#d3dce6',
+      dark: '#0e7490',
+  },
+  fontFamily: {
+    sans: ['Graphik', 'sans-serif'],
+    serif: ['Merriweather', 'serif'],
+  },
     container: {
       center: true,
       padding: "2rem",
       screens: {
         "2xl": "1400px",
       },
+
+  
     },
     extend: {
       colors: {
@@ -75,6 +95,7 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+  
 } satisfies Config
 
 export default config

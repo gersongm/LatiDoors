@@ -2,12 +2,11 @@ import{
     BarChart4,
     Building2,
     Calendar,
-    CreditCard,
+    HandCoins,
     LogOut,
     Settings,
     PanelsTopLeft,
     ShieldCheck,
-    CircleHelpIcon,
     User,
     Minimize2,
     Shield,
@@ -21,6 +20,9 @@ import{
     ShoppingBasket,
     Layers3,
     Landmark,
+    Fuel,
+    Banknote,
+    Section,
    
 } from 'lucide-react'
 
@@ -33,58 +35,100 @@ export const dataAdminSidebar=[
     {
         title: 'Configuracion',
         icon: Settings ,
-        link: '/settings'
+        link: '/Admin/settings'
     },
     {
-        title: 'Analisis',
+      title: 'Monedas',
+      icon: HandCoins  ,
+      link: '/Admin/money'
+  },
+    {
+        title: 'Análisis',
         icon: BarChart4 ,
-        link: '/analisis'
+        link: '/Admin/analisis'
     },
- 
+    {
+      title: 'Comprovantes',
+      icon: Section,
+      link: '/Admin/comprovantes_fiscales'
+  },
     {
         title: 'Bancos',
         icon: Landmark,
-        link: '/bancos'
+        link: '/Admin/bancos'
     },
     {
         title:'Usuarios',
         icon: User,
-        link: '/usuarios'
+        link: '/Admin/usuarios'
       },
       {
         title:'Roles',
         icon: Minimize2,
-        link: '/roles'
+        link: '/Admin/roles'
       },
       {
         title:'Permisos',
         icon: Shield,
-        link: '/permisos'
+        link: '/Admin/permisos'
       },
       {
         title:'Reportes',
         icon: BookDashedIcon,
-        link: '/reportes'
+        link: '/Admin/reportes'
       },
  
     
 ]
-
-export const dataUserSidebar=[
+export const dataInventarioSidebar=[
   {
-    title:'Cajas',
-    icon: CircleDollarSign,
-    link: '/cajas'
+    title:'Productos',
+    icon: ShoppingBasket,
+    link: '/mercancias'
+  },
+  {
+    title:'Categorías',
+    icon: Layers3,
+    link: '/categorias'
   },
   {
     title:'Inventario',
     icon: GalleryHorizontal,
     link: '/inventario'
   },
+  
+]
+export const dataIngresosSidebar=[
+ 
+  {
+    title:'Clientes',
+    icon: UserRound,
+    link: '/clientes'
+  },
+ 
+
   {
     title:'Ventas',
     icon: ShoppingCart,
     link: '/ventas'
+  },
+  {
+    title:'Cajas',
+    icon: CircleDollarSign,
+    link: '/cajas'
+  },
+  {
+    title:'Notas de Credito',
+    icon: ShoppingCart,
+    link: '/notas-credito'
+  },
+]
+export const dataGastosSidebar=[
+
+  {
+    title:'Proveedores',
+    icon: Handshake,
+    link: '/proveedores'
   },
   {
     title:'Compras',
@@ -92,42 +136,22 @@ export const dataUserSidebar=[
     link: '/compras'
   },
   {
-    title:'Clientes',
-    icon: UserRound,
-    link: '/clientes'
+    title:'Notas de Debito',
+    icon: Banknote,
+    link: '/notas-debito'
   },
   {
-    title:'Proveedores',
-    icon: Handshake,
-    link: '/proveedores'
+    title:'Otros Gastos',
+    icon: Fuel,
+    link: '/otros-gastos'
   },
-  {
-    title:'Productos',
-    icon: ShoppingBasket,
-    link: '/productos'
-  },
-  {
-    title:'Categorias',
-    icon: Layers3,
-    link: '/categorias'
-  },
-
-    
-   
- 
 ]
-
 export const dataGenericoSidebar=[
         
         {
-            title: 'Calendar',
+            title: 'Instalaciones',
             icon: Calendar ,
-            link: '/calendar'
-        },
-        {
-            title: 'Ayuda',
-            icon: CircleHelpIcon,
-            link: '/help'
+            link: '/instalaciones'
         },
         {
             title:'Acerca de',

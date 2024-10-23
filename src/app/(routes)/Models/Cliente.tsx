@@ -1,6 +1,6 @@
 // Define the structure of your client data with type safety
 export interface Cliente {
-    id: number;
+    id?: string;
     nombre: string;
     direccion: string;
     telefono: string;
@@ -12,6 +12,6 @@ export interface Cliente {
     limite_credito: number;
     isActivo: boolean;
     referencia?: string; // Optional Referencia field
-    fecha_ultima_compra: Date; // Optional formatted date field
-    notas:string;
+    fecha_ultima_compra?: Date; // Optional formatted date field
+    notas?:string;
   }

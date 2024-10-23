@@ -1,28 +1,21 @@
 import { API_SERVER_URL } from "@/app/constantes";
+import instance from "@/Constants"; // Assuming axios is installed
 
-const sqlAll = async (tabla: string) => {
-  // Use a more reliable URL construction approach
-  const url = new URL(API_SERVER_URL);
-  url.searchParams.append("tabla", tabla); // Add query parameter
 
+
+const AllData = async (tabla: string) => {
   try {
-    const response = await fetch(url.toString());
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
+    const respuesta = await instance.get(`?tabla=${tabla}`);
+   
+    return respuesta.data;
   } catch (error) {
-    console.error("Error fetching data:", error);
-    // Handle errors gracefully, e.g., return a default value or display an error message
-    return null; // Or provide a user-friendly message
+    // Maneja el error según la lógica de tu aplicación (ej: lanza error específico, retorna datos predeterminados)
+    throw new Error(`Error obteniendo datos para la tabla ${tabla}`); // Ejemplo de manejo de error
   }
 };
-export default sqlAll;
+export default AllData;
 
-export const sqlDelete = async (tabla: string, id: string) => {
+export const deleteData = async (tabla: string, id: string) => {
   // Use a more reliable URL construction approach
   const url = new URL(API_SERVER_URL);
   url.searchParams.append("tabla", tabla); // Add query parameter
@@ -50,14 +43,11 @@ export const sqlDelete = async (tabla: string, id: string) => {
   }
 };
 
-export const sqlAdd = async (tabla: string, rows: object) => {
-  // Use a more reliable URL construction approach
-  const url = new URL(API_SERVER_URL);
-  url.searchParams.append("tabla", tabla); // Add query parameter
+export const AddData = async (tabla: string, rows: object) => {
+
 
   try {
     const formData = new FormData();
-    formData.append("METHOD", "INSERT");
     // Loop through each row in the array and append data
 
     Object.entries(rows).forEach(([key, value]) => {
@@ -69,25 +59,28 @@ export const sqlAdd = async (tabla: string, rows: object) => {
       }
     });
 
-    const response = await fetch(url.toString(), {
-      method: "POST",
-      body: formData,
+    const response = await instance.post("?tabla=" + tabla, formData, {
+      // Use axios.post for simplicity
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data;
+    
+      return response.data;
+    
   } catch (error) {
-    console.error("Error fetching data:", error);
+    throw new Error(`HTTP error! con la base de datos`);
     // Handle errors gracefully, e.g., return a default value or display an error message
-    return null; // Or provide a user-friendly message
+    return [{ error: error }]; // Or provide a user-friendly message
   }
 };
 
-export const sqlUpdate = async (tabla: string, rows: object) => {
+export const UpdateData = async (tabla: string, rows: object) => {
   // Use a more reliable URL construction approach
   const url = new URL(API_SERVER_URL);
   url.searchParams.append("tabla", tabla); // Add query parameter
@@ -115,31 +108,64 @@ export const sqlUpdate = async (tabla: string, rows: object) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching data:",rows);
+    console.error("Error fetching data:", rows);
     // Handle errors gracefully, e.g., return a default value or display an error message
     return null; // Or provide a user-friendly message
   }
 };
 
-export const sqlSelect = async (tabla:string,consulta:string) => {
-  // Use a more reliable URL construction approach
-  const url = new URL(API_SERVER_URL);
-  url.searchParams.append("tabla", tabla);
-  const sql= `${consulta}`;
-
-  url.searchParams.append("sql", sql);
+export const SelectData = async (tabla: string, consulta: string) => {
   try {
-    const response = await fetch(url.toString());
+    const respuesta = await instance.get(`?tabla=${tabla}&sql=${consulta}`);
+    return respuesta.data;
+  } catch (error) {
+    // Maneja el error según la lógica de tu aplicación (ej: lanza error específico, retorna datos predeterminados)
+    throw new Error(`Error obteniendo datos para la tabla ${tabla}`); // Ejemplo de manejo de error
+  }
+};
 
-    if (!response.ok) {
+export const SearchData = async ( consulta: string) => {
+  // Use a more reliable URL construction approach
+
+  try {
+  
+    // Send a GET request with query parameters
+    const response = await instance.get(`?search=${consulta}`);
+ 
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error obteniendo datos`);
+  }
+};
+
+export const WhereData = async (tabla: string, isWhere: string) => {
+  // Use a more reliable URL construction approach
+
+  try {
+    // Send a GET request with query parameters
+    const response = await instance.get(`?tabla=${tabla}&where=${isWhere}`);
+  
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error obteniendo datos para la tabla ${tabla}`);
+  }
+};
+
+export const sqlDelete = async (tabla: string, id: string|undefined) => {
+ // Assuming a specific endpoint for DELETE
+
+  try {
+    const consulta=`DELETE FROM ${tabla} WHERE id=${id}`;
+    // Send a DELETE request with query parameters
+    const response = await instance.post(`?sql=${consulta}`);
+
+    if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
-    console.error("Error fetching data:", error);
-    // Handle errors gracefully, e.g., return a default value or display an error message
-    return null; // Or provide a user-friendly message
+    console.error("Error deleting data:", error);
+    // Handle errors gracefully (more on this later)
   }
 };

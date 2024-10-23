@@ -6,7 +6,7 @@ export interface Mercancia {
     precio_costo: number;
     precio_venta: number; // Optional RNC field
     categoria_id: string; // Optional Cedula field
-    fecha_ingreso: Date;
+    fecha_ingreso: string;
     isActivo: boolean ;
     almacen_id:string;
     suplidor_id:string
